@@ -15,15 +15,21 @@
     function state() {
       return {
         darkMode: false,
-        darkClass: {
-          'dark': this.darkMode
-        },
+        posts: [],
         entry: {
           loaded: false,
           data: undefined
         },
+        loadPosts() {
+          if (this.posts.length === 0) {
+            fetch('http://localhost:8000/posts')
+              .then(res => res.json())
+              .then(posts => this.posts = posts);
+          }
+        },
         async loadEntry() {
-          fetch('http://localhost:8000/docs/doc_000', {
+          document.body.style.cursor = 'wait';
+          fetch('http://localhost:8000/posts/doc_001', {
               mode: 'cors',
               headers: {
                 'Content-Type': 'text/html'
@@ -31,6 +37,7 @@
             })
             .then(res => res.text())
             .then(data => {
+              document.body.style.cursor = 'default';
               this.entry = {
                 loaded: true,
                 data
@@ -90,6 +97,23 @@
       height: 80%;
     }
 
+    .icon-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 4.5rem;
+      height: 4.5rem;
+      font-size: 2.5rem;
+    }
+
+    @media (min-width: 1024px) {
+      .icon-container {
+        width: 2.25rem;
+        height: 2.25rem;
+        font-size: 1.25rem;
+      }
+    }
+
     .push {
       margin-left: auto;
     }
@@ -105,28 +129,47 @@
       background-position: center;
     }
 
+    #posts {
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    #posts>.card {
+      background-color: white;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .1), 0 4px 6px -2px rgba(0, 0, 0, .05);
+    }
+
+    #posts>.card:hover {
+      cursor: pointer;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, .25);
+    }
+
+    #posts.dark {
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    #posts.dark>.card {
+      background-color: #111;
+      box-shadow: 0 10px 15px -3px rgba(255, 255, 255, .1), 0 4px 6px -2px rgba(255, 255, 255, .05);
+    }
+
+    #posts.dark>.card:hover {
+      cursor: pointer;
+      box-shadow: 0 10px 15px -3px rgba(255, 255, 255, 0.5), 0 4px 6px -2px rgba(255, 255, 255, .25);
+    }
+
+    .card-cover {
+      height: 55%;
+      object-fit: cover;
+    }
+
     footer a {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 4.5rem;
-      height: 4.5rem;
       border-radius: 100%;
-      font-size: 2.5rem;
       outline: 0;
       color: white;
       background-color: black;
       -webkit-transition: all .3s;
       -moz-transition: all .3s;
       transition: all .3s;
-    }
-
-    @media (min-width: 1024px) {
-      footer a {
-        width: 2.25rem;
-        height: 2.25rem;
-        font-size: 1.25rem;
-      }
     }
 
     footer.dark a {
@@ -149,12 +192,12 @@
   </style>
 </head>
 
-<body class="bg-black" x-data="state()">
+<body class="bg-black" x-data="state()" x-init="loadPosts()">
   <header class="bg-neon-pink flex items-center" :class="{ 'dark': darkMode }">
     <img class="logo" :src="`./assets/giko-logo${darkMode ? '-white' : ''}.svg`" alt="Blog logo" />
     <a href="#posts" class="ml-4 lg:ml-2 text-4xl lg:text-2xl font-bold">Posts</a>
     <div class="push flex flex-col items-center">
-      <span class="mb-3 lg:mb-1 text-2xl lg:text-lg font-bold">Dark</span>
+      <span class="icon-container"><i class="fa" :class="{ 'fa-sun-o': !darkMode, 'fa-moon-o': darkMode }"></i></span>
       <div class="pretty p-switch p-fill text-5xl lg:text-lg">
         <input type="checkbox" x-model="darkMode" />
         <div class="state">
@@ -169,15 +212,34 @@
     <p class="text-white text-xl font-medium">Software Developer, Cat Lover</p>
     <p class="text-white text-2xl font-medium"><i>Experience Creator</i></p>
   </div>
-  <div id="posts" style="height: 500px; background-color: white;"></div>
+  <div id="posts" class="px-4 py-5 flex flex-wrap" :class="{ 'dark': darkMode }">
+    <template x-for="post in posts" :key="post.id">
+      <div class="max-w-lg lg:max-w-sm m-6 rounded overflow-hidden flex-none flex flex-col card" @click="console.log(post.id)">
+        <img class="w-full card-cover" :src="post.coverUrl" :alt="`Cover for ${post.title}`">
+        <div class="px-6 py-4">
+          <div class="font-bold text-4xl lg:text-xl mb-2" x-text="post.title"></div>
+        </div>
+        <div class="px-6 py-4 flex flex-wrap">
+          <template x-for="label in post.labels" :key="label">
+            <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-xl lg:text-sm font-semibold text-gray-700 m-1" x-text="label"></span>
+          </template>
+        </div>
+      </div>
+    </template>
+    <!-- <template x-if="!entry.loaded"><button @click="loadEntry">Load Post</button></template>
+    <template x-if="entry.loaded">
+      <div x-html="entry.data"></div>
+    </template>
+    <img src="http://localhost:8000/post-covers/data-service-article.png" /> -->
+  </div>
   <footer class="bg-neon-pink px-6 py-4 lg:py-2 flex items-center" :class="{ 'dark': darkMode }">
     <span class="text-2xl lg:text-base font-medium">Created by Oriol Miró Barceló</span>
     <div class="push flex space-x-2">
-      <a href="https://instagram.com/bertini36/" target="_blank"><i class="fa fa-instagram"></i></a>
-      <a href="https://instagram.com/bertini36/" target="_blank"><i class="fa fa-twitter"></i></a>
-      <a href="https://instagram.com/bertini36/" target="_blank"><i class="fa fa-linkedin"></i></a>
-      <a href="https://instagram.com/bertini36/" target="_blank"><i class="fa fa-github"></i></a>
-      <a href="https://instagram.com/bertini36/" target="_blank"><i class="fa fa-stack-overflow"></i></a>
+      <a href="https://instagram.com/bertini36/" target="_blank" class="icon-container"><i class="fa fa-instagram"></i></a>
+      <a href="https://instagram.com/bertini36/" target="_blank" class="icon-container"><i class="fa fa-twitter"></i></a>
+      <a href="https://instagram.com/bertini36/" target="_blank" class="icon-container"><i class="fa fa-linkedin"></i></a>
+      <a href="https://instagram.com/bertini36/" target="_blank" class="icon-container"><i class="fa fa-github"></i></a>
+      <a href="https://instagram.com/bertini36/" target="_blank" class="icon-container"><i class="fa fa-stack-overflow"></i></a>
     </div>
   </footer>
 </body>
