@@ -3,6 +3,8 @@
 
 <head>
   <meta charset="utf-8" />
+  <meta http-equiv="Cache-control" content="public, max-age=604800, immutable" />
+  <link rel="icon" type="image/svg" href="./assets/favicon.png" />
 
   <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/pretty-checkbox/3.0.0/pretty-checkbox.min.css" rel="stylesheet" />
@@ -38,6 +40,7 @@
             .then(res => res.text())
             .then(data => {
               document.body.style.cursor = 'default';
+              window.scrollTo(0, 0);
               this.entry = {
                 loaded: true,
                 data
@@ -162,6 +165,75 @@
       object-fit: cover;
     }
 
+    #post-area {
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    #post-area.dark {
+      background-color: rgba(0, 0, 0, 0.9);
+      color: white;
+    }
+
+    #post-area button {
+      color: white;
+      background-color: black;
+      font-weight: bold;
+    }
+
+    #post-area.dark button {
+      color: black;
+      background-color: white;
+    }
+
+    #post-area button:hover {
+      background-color: #777;
+    }
+
+    #post-content>h1 {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    #post-content>h2 {
+      margin-top: 1rem;
+      font-size: 1.75rem;
+      font-weight: bold;
+    }
+
+    #post-content>h3 {
+      margin-top: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    #post-content ul {
+      list-style-type: disc;
+      margin-left: 1.5rem;
+    }
+
+    #post-content :not(pre) code {
+      color: #f52c2c;
+      background-color: #ffbaba;
+      border-radius: 1px;
+      padding: 0 0.25rem;
+    }
+
+    .dark #post-content :not(pre) code {
+      color: #ffbaba;
+      background-color: #f52c2c;
+    }
+
+    #post-content pre {
+      white-space: pre-wrap;
+      margin: 0.5rem;
+      padding: 0.5rem;
+      background-color: #ddd;
+    }
+
+    .dark #post-content pre {
+      background-color: #444;
+    }
+
     footer a {
       border-radius: 100%;
       outline: 0;
@@ -195,7 +267,7 @@
 <body class="bg-black" x-data="state()" x-init="loadPosts()">
   <header class="bg-neon-pink flex items-center" :class="{ 'dark': darkMode }">
     <img class="logo" :src="`./assets/giko-logo${darkMode ? '-white' : ''}.svg`" alt="Blog logo" />
-    <a href="#posts" class="ml-4 lg:ml-2 text-4xl lg:text-2xl font-bold">Posts</a>
+    <a :href="entry.loaded ? '#post-area' : '#posts'" class="ml-4 lg:ml-2 text-4xl lg:text-2xl font-bold">Posts</a>
     <div class="push flex flex-col items-center">
       <span class="icon-container"><i class="fa" :class="{ 'fa-sun-o': !darkMode, 'fa-moon-o': darkMode }"></i></span>
       <div class="pretty p-switch p-fill text-5xl lg:text-lg">
@@ -206,40 +278,63 @@
       </div>
     </div>
   </header>
+  <!-- When the entry is loaded, this takes the same space as the header to position correctly the blog post -->
+  <template x-if="entry.loaded">
+    <div style="height: 10%;"></div>
+  </template>
   <div class="background"></div>
-  <div class="w-full h-full flex flex-col justify-center items-center bg-transparent">
-    <h2 class="text-gray-100 text-6xl font-bold">Oriol Miró Barceló</h2>
-    <p class="text-white text-xl font-medium">Software Developer, Cat Lover</p>
-    <p class="text-white text-2xl font-medium"><i>Experience Creator</i></p>
-  </div>
-  <div id="posts" class="px-4 py-5 flex flex-wrap" :class="{ 'dark': darkMode }">
-    <template x-for="post in posts" :key="post.id">
-      <div class="max-w-lg lg:max-w-sm m-6 rounded overflow-hidden flex-none flex flex-col card" @click="console.log(post.id)">
-        <img class="w-full card-cover" :src="post.coverUrl" :alt="`Cover for ${post.title}`">
-        <div class="px-6 py-4">
-          <div class="font-bold text-4xl lg:text-xl mb-2" x-text="post.title"></div>
+  <template x-if="!entry.loaded">
+    <div class="w-full h-full flex flex-col justify-center items-center bg-transparent">
+      <h2 class="text-gray-100 text-6xl font-bold">Oriol Miró Barceló</h2>
+      <p class="text-white text-xl font-medium">Software Developer, Cat Lover</p>
+      <p class="text-white text-2xl font-medium"><i>Experience Creator</i></p>
+    </div>
+  </template>
+  <template x-if="!entry.loaded">
+    <div id="posts" class="px-4 py-5 flex flex-wrap" :class="{ 'dark': darkMode }">
+      <template x-for="post in posts" :key="post.id">
+        <div class="max-w-lg lg:max-w-sm m-6 rounded overflow-hidden flex-none flex flex-col card" @click="loadEntry">
+          <img class="w-full card-cover" :src="post.coverUrl" :alt="`Cover for ${post.title}`">
+          <div class="px-6 py-4">
+            <div class="font-bold text-4xl lg:text-xl mb-2" x-text="post.title"></div>
+          </div>
+          <div class="px-6 py-4 flex flex-wrap">
+            <template x-for="label in post.labels" :key="label">
+              <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-xl lg:text-sm font-semibold text-gray-700 m-1" x-text="label"></span>
+            </template>
+          </div>
         </div>
-        <div class="px-6 py-4 flex flex-wrap">
-          <template x-for="label in post.labels" :key="label">
-            <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-xl lg:text-sm font-semibold text-gray-700 m-1" x-text="label"></span>
-          </template>
-        </div>
+      </template>
+      <!-- <template x-if="!entry.loaded"><button @click="loadEntry">Load Post</button></template>
+      <template x-if="entry.loaded">
+        <div x-html="entry.data"></div>
+      </template>
+      <img src="http://localhost:8000/post-covers/data-service-article.png" /> -->
+    </div>
+  </template>
+  <template x-if="entry.loaded">
+    <div id="post-area" :class="{ 'dark': darkMode }">
+      <div class="w-full pt-6 flex justify-center">
+        <button class="py-2 px-4 rounded-l" @click="console.log('prev')">
+          <i class="fa fa-arrow-left"></i> Prev
+        </button>
+        <button class="py-2 px-4" @click="entry.loaded = false">
+          <i class="fa fa-th-large"></i> Center
+        </button>
+        <button class="py-2 px-4 rounded-r" @click="console.log('next')">
+          <i class="fa fa-arrow-right"></i> Next
+        </button>
       </div>
-    </template>
-    <!-- <template x-if="!entry.loaded"><button @click="loadEntry">Load Post</button></template>
-    <template x-if="entry.loaded">
-      <div x-html="entry.data"></div>
-    </template>
-    <img src="http://localhost:8000/post-covers/data-service-article.png" /> -->
-  </div>
+      <div id="post-content" class="pb-4 px-16 md:px-24 lg:px-40 xl:px-56" x-html="entry.data"></div>
+    </div>
+  </template>
   <footer class="bg-neon-pink px-6 py-4 lg:py-2 flex items-center" :class="{ 'dark': darkMode }">
     <span class="text-2xl lg:text-base font-medium">Created by Oriol Miró Barceló</span>
     <div class="push flex space-x-2">
-      <a href="https://instagram.com/bertini36/" target="_blank" class="icon-container"><i class="fa fa-instagram"></i></a>
-      <a href="https://instagram.com/bertini36/" target="_blank" class="icon-container"><i class="fa fa-twitter"></i></a>
-      <a href="https://instagram.com/bertini36/" target="_blank" class="icon-container"><i class="fa fa-linkedin"></i></a>
-      <a href="https://instagram.com/bertini36/" target="_blank" class="icon-container"><i class="fa fa-github"></i></a>
-      <a href="https://instagram.com/bertini36/" target="_blank" class="icon-container"><i class="fa fa-stack-overflow"></i></a>
+      <a href="https://www.instagram.com/magna_shogun/" target="_blank" class="icon-container"><i class="fa fa-instagram"></i></a>
+      <a href="https://www.linkedin.com/in/omirobarcelo" target="_blank" class="icon-container"><i class="fa fa-linkedin"></i></a>
+      <a href="https://github.com/omirobarcelo" target="_blank" class="icon-container"><i class="fa fa-github"></i></a>
+      <a href="https://stackoverflow.com/users/8526764/" target="_blank" class="icon-container"><i class="fa fa-stack-overflow"></i></a>
     </div>
   </footer>
 </body>
