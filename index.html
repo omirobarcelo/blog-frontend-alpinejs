@@ -13,264 +13,17 @@
 
   <title>OMB's Blog</title>
 
-  <script>
-    function state() {
-      return {
-        darkMode: false,
-        posts: [],
-        entry: {
-          loaded: false,
-          data: undefined
-        },
-        loadPosts() {
-          if (this.posts.length === 0) {
-            fetch('http://localhost:8000/posts')
-              .then(res => res.json())
-              .then(posts => this.posts = posts);
-          }
-        },
-        async loadEntry() {
-          document.body.style.cursor = 'wait';
-          fetch('http://localhost:8000/posts/doc_001', {
-              mode: 'cors',
-              headers: {
-                'Content-Type': 'text/html'
-              }
-            })
-            .then(res => res.text())
-            .then(data => {
-              document.body.style.cursor = 'default';
-              window.scrollTo(0, 0);
-              this.entry = {
-                loaded: true,
-                data
-              };
-              console.log(this.entry);
-              const parser = new DOMParser();
-              // Parse the text
-              const doc = parser.parseFromString(data, "text/html");
-              console.log(doc);
-            })
-            .catch(error => console.error(error));
-          // const res = await fetch('http://localhost:8000/docs/doc_000', {
-          //     mode: 'cors',
-          //     headers: {
-          //       'Content-Type': 'text/html'
-          //     }
-          //   });
-          // const data = await res.text();
-          // entry
-        }
-      }
-    }
-
-  </script>
-
-  <style media="screen">
-    *.dark {
-      color: white;
-    }
-
-    .bg-neon-pink {
-      background-color: #eb2f96;
-    }
-
-    .bg-neon-pink.dark {
-      background-color: black;
-    }
-
-    html,
-    body {
-      width: 100%;
-      height: 100%;
-    }
-
-    header {
-      width: 100%;
-      height: 10%;
-      position: fixed;
-      padding: 0 1rem;
-    }
-
-    header.dark {
-      background-color: black;
-    }
-
-    header>.logo {
-      height: 80%;
-    }
-
-    .icon-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 4.5rem;
-      height: 4.5rem;
-      font-size: 2.5rem;
-    }
-
-    @media (min-width: 1024px) {
-      .icon-container {
-        width: 2.25rem;
-        height: 2.25rem;
-        font-size: 1.25rem;
-      }
-    }
-
-    .push {
-      margin-left: auto;
-    }
-
-    .background {
-      width: 100%;
-      height: 100%;
-      position: fixed;
-      z-index: -1;
-      background-image: url('./assets/bg-cat.jpg');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
-    }
-
-    #posts {
-      background-color: rgba(255, 255, 255, 0.9);
-    }
-
-    #posts>.card {
-      background-color: white;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .1), 0 4px 6px -2px rgba(0, 0, 0, .05);
-    }
-
-    #posts>.card:hover {
-      cursor: pointer;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, .25);
-    }
-
-    #posts.dark {
-      background-color: rgba(0, 0, 0, 0.9);
-    }
-
-    #posts.dark>.card {
-      background-color: #111;
-      box-shadow: 0 10px 15px -3px rgba(255, 255, 255, .1), 0 4px 6px -2px rgba(255, 255, 255, .05);
-    }
-
-    #posts.dark>.card:hover {
-      cursor: pointer;
-      box-shadow: 0 10px 15px -3px rgba(255, 255, 255, 0.5), 0 4px 6px -2px rgba(255, 255, 255, .25);
-    }
-
-    .card-cover {
-      height: 55%;
-      object-fit: cover;
-    }
-
-    #post-area {
-      background-color: rgba(255, 255, 255, 0.9);
-    }
-
-    #post-area.dark {
-      background-color: rgba(0, 0, 0, 0.9);
-      color: white;
-    }
-
-    #post-area button {
-      color: white;
-      background-color: black;
-      font-weight: bold;
-    }
-
-    #post-area.dark button {
-      color: black;
-      background-color: white;
-    }
-
-    #post-area button:hover {
-      background-color: #777;
-    }
-
-    #post-content>h1 {
-      font-size: 2rem;
-      font-weight: bold;
-    }
-
-    #post-content>h2 {
-      margin-top: 1rem;
-      font-size: 1.75rem;
-      font-weight: bold;
-    }
-
-    #post-content>h3 {
-      margin-top: 0.75rem;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-
-    #post-content ul {
-      list-style-type: disc;
-      margin-left: 1.5rem;
-    }
-
-    #post-content :not(pre) code {
-      color: #f52c2c;
-      background-color: #ffbaba;
-      border-radius: 1px;
-      padding: 0 0.25rem;
-    }
-
-    .dark #post-content :not(pre) code {
-      color: #ffbaba;
-      background-color: #f52c2c;
-    }
-
-    #post-content pre {
-      white-space: pre-wrap;
-      margin: 0.5rem;
-      padding: 0.5rem;
-      background-color: #ddd;
-    }
-
-    .dark #post-content pre {
-      background-color: #444;
-    }
-
-    footer a {
-      border-radius: 100%;
-      outline: 0;
-      color: white;
-      background-color: black;
-      -webkit-transition: all .3s;
-      -moz-transition: all .3s;
-      transition: all .3s;
-    }
-
-    footer.dark a {
-      color: white;
-      background-color: #666;
-    }
-
-    footer a:hover,
-    footer a:focus,
-    footer a:active {
-      background-color: #666;
-    }
-
-    footer.dark a:hover,
-    footer.dark a:focus,
-    footer.dark a:active {
-      background-color: #eb2f96;
-    }
-
-  </style>
+  <script src="./index.js"></script>
+  <link rel="stylesheet" media="screen" href="./index.css" />
 </head>
 
 <body class="bg-black" x-data="state()" x-init="loadPosts()">
-  <header class="bg-neon-pink flex items-center" :class="{ 'dark': darkMode }">
+  <header class="header-height bg-neon-pink flex items-center" :class="{ 'dark': darkMode }">
     <img class="logo" :src="`./assets/giko-logo${darkMode ? '-white' : ''}.svg`" alt="Blog logo" />
-    <a :href="entry.loaded ? '#post-area' : '#posts'" class="ml-4 lg:ml-2 text-4xl lg:text-2xl font-bold">Posts</a>
+    <a :href="entry.loaded ? '#post-area' : '#posts'" class="ml-4 md:ml-2 text-4xl md:text-2xl font-bold">Posts</a>
     <div class="push flex flex-col items-center">
       <span class="icon-container"><i class="fa" :class="{ 'fa-sun-o': !darkMode, 'fa-moon-o': darkMode }"></i></span>
-      <div class="pretty p-switch p-fill text-5xl lg:text-lg">
+      <div class="pretty p-switch p-fill text-3xl md:text-lg">
         <input type="checkbox" x-model="darkMode" />
         <div class="state">
           <label />
@@ -280,7 +33,7 @@
   </header>
   <!-- When the entry is loaded, this takes the same space as the header to position correctly the blog post -->
   <template x-if="entry.loaded">
-    <div style="height: 10%;"></div>
+    <div class="header-height"></div>
   </template>
   <div class="background"></div>
   <template x-if="!entry.loaded">
@@ -293,43 +46,38 @@
   <template x-if="!entry.loaded">
     <div id="posts" class="px-4 py-5 flex flex-wrap" :class="{ 'dark': darkMode }">
       <template x-for="post in posts" :key="post.id">
-        <div class="max-w-lg lg:max-w-sm m-6 rounded overflow-hidden flex-none flex flex-col card" @click="loadEntry">
+        <div class="max-w-lg md:max-w-sm m-6 rounded overflow-hidden flex-none flex flex-col card" @click="loadEntry(post.id)">
           <img class="w-full card-cover" :src="post.coverUrl" :alt="`Cover for ${post.title}`">
           <div class="px-6 py-4">
-            <div class="font-bold text-4xl lg:text-xl mb-2" x-text="post.title"></div>
+            <div class="font-bold text-4xl md:text-xl mb-2" x-text="post.title"></div>
           </div>
           <div class="px-6 py-4 flex flex-wrap">
             <template x-for="label in post.labels" :key="label">
-              <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-xl lg:text-sm font-semibold text-gray-700 m-1" x-text="label"></span>
+              <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-xl md:text-sm font-semibold text-gray-700 m-1" x-text="label"></span>
             </template>
           </div>
         </div>
       </template>
-      <!-- <template x-if="!entry.loaded"><button @click="loadEntry">Load Post</button></template>
-      <template x-if="entry.loaded">
-        <div x-html="entry.data"></div>
-      </template>
-      <img src="http://localhost:8000/post-covers/data-service-article.png" /> -->
     </div>
   </template>
   <template x-if="entry.loaded">
     <div id="post-area" :class="{ 'dark': darkMode }">
       <div class="w-full pt-6 flex justify-center">
-        <button class="py-2 px-4 rounded-l" @click="console.log('prev')">
-          <i class="fa fa-arrow-left"></i> Prev
+        <button :disabled="entry.prevId === null" class="py-2 px-4 rounded-l border-r" title="Previous Post" @click="loadEntry(entry.prevId)">
+          <i class="fa fa-arrow-left"></i> Previous
         </button>
-        <button class="py-2 px-4" @click="entry.loaded = false">
-          <i class="fa fa-th-large"></i> Center
+        <button class="px-4 text-2xl" title="Post List" @click="entry.loaded = false">
+          <i class="fa fa-home"></i>
         </button>
-        <button class="py-2 px-4 rounded-r" @click="console.log('next')">
-          <i class="fa fa-arrow-right"></i> Next
+        <button :disabled="entry.nextId === null" class="py-2 px-4 rounded-r border-l" title="Next Post" @click="loadEntry(entry.nextId)">
+          Next <i class="fa fa-arrow-right"></i>
         </button>
       </div>
-      <div id="post-content" class="pb-4 px-16 md:px-24 lg:px-40 xl:px-56" x-html="entry.data"></div>
+      <div id="post-content" class="pb-4 px-16 md:px-24 md:px-40 xl:px-56" x-html="entry.data"></div>
     </div>
   </template>
-  <footer class="bg-neon-pink px-6 py-4 lg:py-2 flex items-center" :class="{ 'dark': darkMode }">
-    <span class="text-2xl lg:text-base font-medium">Created by Oriol Miró Barceló</span>
+  <footer class="bg-neon-pink px-6 py-4 md:py-2 flex items-center" :class="{ 'dark': darkMode }">
+    <span class="text-2xl md:text-base font-medium">Created by Oriol Miró Barceló</span>
     <div class="push flex space-x-2">
       <a href="https://www.instagram.com/magna_shogun/" target="_blank" class="icon-container"><i class="fa fa-instagram"></i></a>
       <a href="https://www.linkedin.com/in/omirobarcelo" target="_blank" class="icon-container"><i class="fa fa-linkedin"></i></a>

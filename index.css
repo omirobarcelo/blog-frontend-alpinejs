@@ -1,0 +1,214 @@
+*.dark {
+  color: white;
+}
+
+.bg-neon-pink {
+  background-color: #eb2f96;
+}
+
+.bg-neon-pink.dark {
+  background-color: black;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+header {
+  width: 100%;
+  position: fixed;
+  padding: 0 1rem;
+}
+
+.header-height {
+  height: 10%;
+  min-height: 7rem;
+}
+
+header.dark {
+  background-color: black;
+}
+
+header>.logo {
+  height: 80%;
+}
+
+.icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  font-size: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .icon-container {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 1.25rem;
+  }
+}
+
+.push {
+  margin-left: auto;
+}
+
+.background {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: -1;
+  background-image: url('./assets/bg-cat.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#posts {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+#posts>.card {
+  background-color: white;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .1), 0 4px 6px -2px rgba(0, 0, 0, .05);
+}
+
+#posts>.card:hover {
+  cursor: pointer;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, .25);
+}
+
+#posts.dark {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+#posts.dark>.card {
+  background-color: #111;
+  box-shadow: 0 10px 15px -3px rgba(255, 255, 255, .1), 0 4px 6px -2px rgba(255, 255, 255, .05);
+}
+
+#posts.dark>.card:hover {
+  cursor: pointer;
+  box-shadow: 0 10px 15px -3px rgba(255, 255, 255, 0.5), 0 4px 6px -2px rgba(255, 255, 255, .25);
+}
+
+.card-cover {
+  height: 55%;
+  object-fit: cover;
+}
+
+#post-area {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+#post-area.dark {
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+}
+
+#post-area button {
+  width: 8rem;
+  color: white;
+  background-color: black;
+  font-weight: 400;
+  border-color: white;
+}
+
+#post-area.dark button {
+  color: black;
+  background-color: white;
+  border-color: black;
+}
+
+#post-area button:hover {
+  background-color: #777;
+}
+
+#post-area button[disabled] {
+  cursor: not-allowed;
+  background-color: #777;
+}
+
+#post-content>h1 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+#post-content>h2 {
+  margin-top: 1rem;
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+
+#post-content>h3 {
+  margin-top: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+#post-content ul {
+  list-style-type: disc;
+  margin-left: 1.5rem;
+}
+
+#post-content :not(pre) code {
+  color: #f52c2c;
+  background-color: #ffbaba;
+  border-radius: 1px;
+  padding: 0 0.25rem;
+}
+
+.dark #post-content :not(pre) code {
+  color: #ffbaba;
+  background-color: #f52c2c;
+}
+
+#post-content pre {
+  white-space: pre-wrap;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  background-color: #ddd;
+}
+
+.dark #post-content pre {
+  background-color: #444;
+}
+
+#post-content iframe {
+  width: 100%;
+  height: 70vh;
+}
+
+#post-content a {
+  text-decoration: underline;
+}
+
+footer a {
+  border-radius: 100%;
+  outline: 0;
+  color: white;
+  background-color: black;
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  transition: all .3s;
+}
+
+footer.dark a {
+  color: white;
+  background-color: #666;
+}
+
+footer a:hover,
+footer a:focus,
+footer a:active {
+  background-color: #666;
+}
+
+footer.dark a:hover,
+footer.dark a:focus,
+footer.dark a:active {
+  background-color: #eb2f96;
+}
