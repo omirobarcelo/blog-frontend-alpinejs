@@ -10,7 +10,7 @@ function state() {
     },
     loadPosts() {
       if (this.posts.length === 0) {
-        fetch('http://localhost:8000/posts')
+        fetch('https://blog-backend-deno.herokuapp.com/posts')
           .then(res => res.json())
           .then(posts => this.posts = posts);
       }
@@ -18,7 +18,7 @@ function state() {
     async loadEntry(id) {
       document.body.style.cursor = 'wait';
       this.entry.data = '<br />';
-      fetch(`http://localhost:8000/posts/${id}`, {
+      fetch(`https://blog-backend-deno.herokuapp.com/posts/${id}`, {
           mode: 'cors',
           headers: {
             'Content-Type': 'text/html'
