@@ -7,14 +7,86 @@
   <link rel="icon" type="image/svg" href="./assets/favicon.png" />
 
   <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/pretty-checkbox/3.0.0/pretty-checkbox.min.css" rel="stylesheet" />
-  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link href="./pretty-checkbox.min.css" rel="stylesheet" />
+  <link href="./font-awesome.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 
   <title>OMB's Blog</title>
 
   <script src="./index.js"></script>
-  <link rel="stylesheet" media="screen" href="./index.css" />
+
+  <style>
+    *.dark {
+      color: white;
+    }
+
+    .bg-neon-pink {
+      background-color: #eb2f96;
+    }
+
+    .bg-neon-pink.dark {
+      background-color: black;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+    }
+
+    header {
+      width: 100%;
+      position: fixed;
+      padding: 0 1rem;
+    }
+
+    .header-height {
+      height: 10%;
+      min-height: 7rem;
+    }
+
+    header.dark {
+      background-color: black;
+    }
+
+    header>.logo {
+      height: 80%;
+    }
+
+    .icon-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 4.5rem;
+      height: 4.5rem;
+      font-size: 2.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .icon-container {
+        width: 2.25rem;
+        height: 2.25rem;
+        font-size: 1.25rem;
+      }
+    }
+
+    .push {
+      margin-left: auto;
+    }
+
+    .background {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      z-index: -1;
+      background-image: url('./assets/bg-cat.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+  </style>
+  <link rel="stylesheet" href="./index.css" media="print" onload="this.media='all'" />
 </head>
 
 <body class="bg-black" x-data="state()" x-init="loadPosts()">
